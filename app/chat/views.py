@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from rest_framework import status, viewsets
 from users.models import User
 from users.serializers import UserSerializer
+from decouple import config
 import pusher
 pusher_client = pusher.Pusher(
   app_id=config('pusher_id'),
