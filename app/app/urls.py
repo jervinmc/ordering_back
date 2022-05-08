@@ -28,6 +28,7 @@ urlpatterns = [
     path('api/v1/inventory-report/', include('inventory_report.urls')),
     path('api/v1/transaction/', include('transaction.urls')),
     path('api/v1/chat/', include('chat.urls')),
+    path('api/v1/size/', include('size.urls')),
     path('api/v1/channel/', include('channel.urls')),
     path('api/v1/product_id/<str:product_id>/', ProductUserID.as_view(), name='get_user'),
     path('api/v1/cart_user/<str:user_id>/', CartsUserID.as_view(), name='get_user'),

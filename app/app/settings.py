@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'notifications',
     'channel',
     'chat',
+    'size',
     'inventory_report'
 ]
 CORS_ALLOW_ALL_ORIGINS = True
