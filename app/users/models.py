@@ -25,5 +25,7 @@ class User(models.Model):
     province=models.CharField(_('province'),max_length=255,blank=True,null=True)
     password=models.CharField(_('password'),max_length=255,blank=True,null=True)
     status=models.CharField(_('status'),max_length=255,blank=True,null=True)
+    image = models.ImageField(
+        _('image'), upload_to=nameFile, default="uploads/Cases.png")
     class Meta:
         ordering = ["-id"]

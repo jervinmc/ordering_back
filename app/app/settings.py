@@ -54,7 +54,8 @@ INSTALLED_APPS = [
     'channel',
     'chat',
     'size',
-    'inventory_report'
+    'inventory_report',
+    'taccount'
 ]
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True

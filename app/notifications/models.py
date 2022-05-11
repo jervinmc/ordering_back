@@ -19,5 +19,6 @@ class Notification(models.Model):
     descriptions=models.CharField(_('descriptions'),max_length=255,blank=True,null=True)
     module=models.CharField(_('module'),max_length=255,blank=True,null=True)
     image=models.CharField(_('image'),max_length=255,blank=True,null=True)
+    users_profile=models.CharField(_('users_profile'),max_length=255,blank=True,null=True)
     class Meta:
         ordering = ["-id"]

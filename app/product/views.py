@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from size.serializers import SizeSerializer
 class ProductView(viewsets.ModelViewSet):  
     filter_backends = [filters.SearchFilter]
-    search_fields = ['category','price','name','descriptions']
+    search_fields = ['product_name','price']
     queryset=Product.objects.all()
     serializer_class=ProductSerializer
     
