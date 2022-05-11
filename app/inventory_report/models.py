@@ -18,6 +18,7 @@ class InventoryReport(models.Model):
     # stocks = models.DecimalField(_('stocks'),max_digits=20, decimal_places=2,default=0.0)
     quantity=models.CharField(_('quantity'),max_length=255,blank=True,null=True)
     stocks=models.IntegerField(_('stocks'),blank=True,null=True,default=0)
+    remaining_stocks=models.IntegerField(_('remaining_stocks'),blank=True,null=True,default=0)
     status=models.CharField(_('status'),max_length=255,blank=True,null=True)
     # image = models.ImageField(
     #     _('image'), upload_to=nameFile, default="uploads/Cases.png")

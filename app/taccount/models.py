@@ -14,7 +14,7 @@ def nameFile(instance, filename):
 
 
 class Taccount(models.Model):
-    account=models.IntegerField(_('account'),blank=True,null=True)
+    account=models.CharField(_('account'),max_length=255,blank=True,null=True)
     debit=models.DecimalField(_('debit'),max_digits=20, decimal_places=2,default=0.0)
     credit=models.DecimalField(_('credit'),max_digits=20, decimal_places=2,default=0.0)
     date=models.CharField(_('date'),max_length=255,blank=True,null=True)

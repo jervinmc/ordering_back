@@ -44,7 +44,7 @@ class TransactionView(viewsets.ModelViewSet):
             item1 = NotificationSerializer(data={"user_id":1,"descriptions":f"Running out of stocks product: {res.get('product_id')}","image":res.get('image'),"users_profile":res.get('users_profile'),"module":'product'})
             item1.is_valid(raise_exception=True)
             item1.save()
-        inventory_serializer = InventoryReportSerializer(data={"product_name":res.get('product_name'),"status":"Subtract","stocks":res.get('quantity')})
+        inventory_serializer = InventoryReportSerializer(data={"product_name":res.get('product_name'),"status":"Subtract","stocks":res.get('quantity'),'remaining_stocks':serializer.data[0]['stocks']})
         inventory_serializer.is_valid(raise_exception=True)
         inventory_serializer.save()
         pusher_client.trigger('notification_admin', 'my-test', {'message': f'Item status : {res.get("status")}','user_id':res.get("user_id")})
@@ -67,14 +67,13 @@ class TransactionBulkCheckout(generics.GenericAPIView):
             serializers.is_valid(raise_exception=True)
             serializers.save()
             print("okay")
-            inventory_serializer = InventoryReportSerializer(data={"product_name":res.get('product_name'),"status":"Subtract","stocks":x['quantity']})
             item_inv = Product.objects.filter(id=x['product_id'])
             serializer = ProductSerializer(item_inv,many=True)
             if(serializer.data[0]['stocks']<5):
-                item1 = NotificationSerializer(data={"user_id":1,"descriptions":f"Running out of stocks product: {x['product_id']}","image":x['image']})
+                item1 = NotificationSerializer(data={"user_id":1,"descriptions":f"Running out of stocks product: {x['product_id']}","image":x['image'],"users_profile":x['users_profile']})
                 item1.is_valid(raise_exception=True)
                 item1.save()
-                
+            inventory_serializer = InventoryReportSerializer(data={"product_name":res.get('product_name'),"status":"Subtract","stocks":x['quantity'],"remaining_stocks":serializer.data[0]['stocks']})
             Carts.objects.filter(user_id = res['data'][0]['user_id'],product_id=x['product_id'] ).delete()
             Product.objects.filter(id=x['product_id']).update(stocks=F('stocks')-x['quantity'])
             NotificationSerializer(data={"user_id":1,"descriptions":f"You have a new order({x['product_name']}) from user_id = {res.get('user_id')}","image":x['image']})
@@ -129,10 +128,13 @@ class TransactionGetall(generics.GenericAPIView):
                 print(x['product_id'])
                 item = Product.objects.filter(id=x['product_id'])
                 item = ProductSerializer(item,many=True)
-                x['price'] = item.data[0]['price']
-                x['product_name'] = item.data[0]['product_name']
-                print(item.data[0]['product_name'])
-                print(x['price'])
+                if(len(item.data)==0):
+                    pass
+                else:
+                    x['price'] = item.data[0]['price']
+                    x['product_name'] = item.data[0]['product_name']
+                    print(item.data[0]['product_name'])
+                    print(x['price'])
             return Response(data=serializers.data)
         except Exception as e:
             print(e)
