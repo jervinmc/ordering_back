@@ -14,7 +14,7 @@ def nameFile(instance, filename):
 
 
 class Product(models.Model):
-    product_name=models.CharField(_('tattoo_name'),max_length=255,blank=True,null=True)
+    product_name=models.CharField(_('product_name'),max_length=255,blank=True,null=True)
     price = models.DecimalField(_('price'),max_digits=20, decimal_places=2,default=0.0)
     user_id=models.CharField(_('user_id'),max_length=255,blank=True,null=True)
     stocks=models.IntegerField(_('stocks'),blank=True,null=True,default=0)

@@ -14,15 +14,16 @@ class ProductView(viewsets.ModelViewSet):
     
     def create(self,request):
         res = request.data
+        print(res)
         serializers = ProductSerializer(data=res)
         serializers.is_valid(raise_exception=True)
         serializers.save()
         size_label = res.get('size_label').split(',')
         size_price = res.get('size_price').split(',')
-        for (x,i) in enumerate(size_label):
-            serializers_size = SizeSerializer(data={"product_id":serializers.data['id'],"price":size_price[x],"label":i})
-            serializers_size.is_valid(raise_exception=True)
-            serializers_size.save()  
+        # for (x,i) in enumerate(size_label):
+        #     serializers_size = SizeSerializer(data={"product_id":serializers.data['id'],"price":size_price[x],"label":i})
+        #     serializers_size.is_valid(raise_exception=True)
+        #     serializers_size.save()  
 
         return Response()
 
