@@ -13,6 +13,8 @@ from channel.views import ChannelGetall,ChannelSend
 from chat.views import ChatGet
 from rest_framework import permissions
 from transaction.views import TransactionBulkCheckout,TransactionNotif
+from color.views import ColorProductID
+from size.views import SizeProductID
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -29,6 +31,7 @@ urlpatterns = [
     path('api/v1/transaction/', include('transaction.urls')),
     path('api/v1/chat/', include('chat.urls')),
     path('api/v1/size/', include('size.urls')),
+    path('api/v1/color/', include('color.urls')),
     path('api/v1/taccount/', include('taccount.urls')),
     path('api/v1/channel/', include('channel.urls')),
     path('api/v1/product_id/<str:product_id>/', ProductUserID.as_view(), name='get_user'),
@@ -40,6 +43,8 @@ urlpatterns = [
     path('api/v1/transaction-add-bulk/', TransactionBulkCheckout.as_view(), name='get_user'),
     path('api/v1/notification_user/<str:user_id>/', NotificationUserID.as_view(), name='get_user'),
     path('api/v1/transaction_getall/', TransactionGetall.as_view(), name='get_user'),
+    path('api/v1/color_product/<str:product_id>/', ColorProductID.as_view(), name='get_user'),
+    path('api/v1/size_product/<str:product_id>/', SizeProductID.as_view(), name='get_user'),
     path('api/v1/channel/', TransactionGetall.as_view(), name='get_user'),
     path('api/v1/channel-admin/<str:account_type>/<int:user_id>/', ChannelGetall.as_view(), name='get_user'),
     path('api/v1/chatgetall/', ChatGet.as_view(), name='get_user'),

@@ -24,5 +24,7 @@ class Transaction(models.Model):
     subtotal=models.CharField(_('subtotal'),max_length=255,blank=True,null=True)
     quantity=models.IntegerField(_('quantity'),blank=True,null=True,default=0)
     image=models.CharField(_('image'),max_length=255,blank=True,null=True)
+    size=models.CharField(_('size'),max_length=255,blank=True,null=True)
+    color=models.CharField(_('color'),max_length=255,blank=True,null=True)
     class Meta:
         ordering = ["-id"]

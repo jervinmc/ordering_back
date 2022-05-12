@@ -6,6 +6,7 @@ from rest_framework import filters
 from rest_framework import status, viewsets
 from rest_framework.response import Response
 from size.serializers import SizeSerializer
+from color.serializers import ColorSerializer
 class ProductView(viewsets.ModelViewSet):  
     filter_backends = [filters.SearchFilter]
     search_fields = ['product_name','price']
@@ -20,11 +21,18 @@ class ProductView(viewsets.ModelViewSet):
         serializers.save()
         size_label = res.get('size_label').split(',')
         size_price = res.get('size_price').split(',')
-        # for (x,i) in enumerate(size_label):
-        #     serializers_size = SizeSerializer(data={"product_id":serializers.data['id'],"price":size_price[x],"label":i})
-        #     serializers_size.is_valid(raise_exception=True)
-        #     serializers_size.save()  
-
+        color_label = res.get('color_label').split(',')
+        print(color_label)
+        for (x,i) in enumerate(size_label):
+            if(size_price[x]!=''):
+                serializers_size = SizeSerializer(data={"product_id":serializers.data['id'],"price":size_price[x],"label":i})
+                serializers_size.is_valid(raise_exception=True)
+                serializers_size.save()  
+        for (x,i) in enumerate(color_label):
+            if(color_label[x]!=''):
+                serializers_color = ColorSerializer(data={"product_id":serializers.data['id'],"label":color_label[x]})
+                serializers_color.is_valid(raise_exception=True)
+                serializers_color.save()
         return Response()
 
 class ProductUserID(generics.GenericAPIView):
