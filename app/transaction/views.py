@@ -60,6 +60,7 @@ class TransactionBulkCheckout(generics.GenericAPIView):
             x['username'] = res.get('username')
             x['barangay'] = res.get('barangay')
             x['address'] = res.get('address')
+            x['fullname'] = res.get('fullname')
             x['city'] = res.get('city')
             x['zip'] = res.get('zip')
             x['province'] = res.get('province')
