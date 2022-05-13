@@ -34,12 +34,12 @@ class CartsUserID(generics.GenericAPIView):
             items = Carts.objects.filter(user_id=user_id)
             listitem = []
             serializers = CartsSerializer(items,many=True)
-            for x in serializers.data:
-                print(x['product_id'])
-                item = Product.objects.filter(id=x['product_id'])
-                item = ProductSerializer(item,many=True)
-                x['price'] = item.data[0]['price']
-                print(x['price'])
+            # for x in serializers.data:
+            #     print(x['product_id'])
+            #     item = Product.objects.filter(id=x['product_id'])
+            #     item = ProductSerializer(item,many=True)
+            #     x['price'] = item.data[0]['price']
+            #     print(x['price'])
             return Response(data=serializers.data)
         except Exception as e:
             print(e)
