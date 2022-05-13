@@ -14,7 +14,7 @@ from chat.views import ChatGet
 from rest_framework import permissions
 from transaction.views import TransactionBulkCheckout,TransactionNotif
 from color.views import ColorProductID
-from size.views import SizeProductID
+from size.views import SizeProductID,SizeEditProduct
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -45,6 +45,8 @@ urlpatterns = [
     path('api/v1/transaction_getall/', TransactionGetall.as_view(), name='get_user'),
     path('api/v1/color_product/<str:product_id>/', ColorProductID.as_view(), name='get_user'),
     path('api/v1/size_product/<str:product_id>/', SizeProductID.as_view(), name='get_user'),
+    path('api/v1/size_product_edit/', SizeEditProduct.as_view(), name='get_user'),
+    
     path('api/v1/channel/', TransactionGetall.as_view(), name='get_user'),
     path('api/v1/channel-admin/<str:account_type>/<int:user_id>/', ChannelGetall.as_view(), name='get_user'),
     path('api/v1/chatgetall/', ChatGet.as_view(), name='get_user'),
