@@ -34,24 +34,31 @@ class SizeProductID(generics.GenericAPIView):
 class SizeEditProduct(generics.GenericAPIView):
     def post(self,request,format=None,product_id=None):
         try:
-            res =request.data
+            res = request.data
             size = Size.objects.filter(product_id=res.get('product_id')).delete()
             color = Color.objects.filter(product_id=res.get('product_id')).delete()
             print(res.get('size_label'))
+
             size_label = res.get('size_label')
             size_price = res.get('size_price')
             color_label = res.get('color_label')
-            for (x,i) in enumerate(size_label):
-                if(size_price[x]!=''):
-                    serializers_size = SizeSerializer(data={"product_id":res.get('product_id'),"price":size_price[x],"label":i})
-                    serializers_size.is_valid(raise_exception=True)
-                    serializers_size.save()  
-            for (x,i) in enumerate(color_label):
-                if(color_label[x]!=''):
-                    serializers_color = ColorSerializer(data={"product_id":res.get('product_id'),"label":color_label[x]})
-                    serializers_color.is_valid(raise_exception=True)
-                    serializers_color.save()
-            return Response(data=serializers_size.data)
+            serializers_size = ''
+            if(res.get('size_label') != ['']):
+                for (x,i) in enumerate(size_label):
+                    print("okayyy")
+                    print(i)
+                    if(size_price[x]!='' and size_label[x]!=''):
+                        serializers_size = SizeSerializer(data={"product_id":res.get('product_id'),"price":size_price[x],"label":i})
+                        serializers_size.is_valid(raise_exception=True)
+                        serializers_size.save()  
+            if(res.get('color_label') != ['']):
+                for (x,i) in enumerate(color_label):
+                    if(color_label[x]!=''):
+                        serializers_color = ColorSerializer(data={"product_id":res.get('product_id'),"label":color_label[x]})
+                        serializers_color.is_valid(raise_exception=True)
+                        serializers_color.save()
+                return Response(data=serializers_size.data)
+            return Response(data=[])
         except Exception as e:
             print(e)
             return Response(status=status.HTTP_404_NOT_FOUND,data=[])

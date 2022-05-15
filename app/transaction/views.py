@@ -97,11 +97,12 @@ class TransactionUserID(generics.GenericAPIView):
                 print(x['product_id'])
                 item = Product.objects.filter(id=x['product_id'])
                 item = ProductSerializer(item,many=True)
-                x['price'] = item.data[0]['price']
-                x['product_name'] = item.data[0]['product_name']
-                print(item.data[0]['product_name'])
-                print(x['price'])
-            return Response(data=serializers.data)
+                if(item.data!=[]):
+                    x['price'] = item.data[0]['price']
+                    x['product_name'] = item.data[0]['product_name']
+                    print(item.data[0]['product_name'])
+                    print(x['price'])
+                return Response(data=serializers.data)
         except Exception as e:
             print(e)
             return Response(status=status.HTTP_404_NOT_FOUND,data=[])

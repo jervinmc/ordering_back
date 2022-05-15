@@ -24,7 +24,7 @@ class ProductView(viewsets.ModelViewSet):
         color_label = res.get('color_label').split(',')
         print(color_label)
         for (x,i) in enumerate(size_label):
-            if(size_price[x]!=''):
+            if(size_price[x]!='' and size_label!=''):
                 serializers_size = SizeSerializer(data={"product_id":serializers.data['id'],"price":size_price[x],"label":i})
                 serializers_size.is_valid(raise_exception=True)
                 serializers_size.save()  
