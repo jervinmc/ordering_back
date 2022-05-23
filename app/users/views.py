@@ -12,6 +12,8 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string, get_template
 import string
 from channel.serializers import ChannelSerializer
+import random
+import string
 from rest_framework.response import Response
 class UserView(viewsets.ModelViewSet):  
     filter_backends = [filters.SearchFilter]
@@ -63,9 +65,35 @@ class Login(generics.GenericAPIView):
 
 
 
+def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))
 class VerifyUser(generics.GenericAPIView):
     def get(self,request,format=None,email=None):
         User.objects.filter(email=email).update(status='Activated')
+        return Response()
+
+
+class EditUser(generics.GenericAPIView):
+    def post(self,request):
+        res = request.data
+        items = User.objects.filter(id=res.get('user_id'))
+        items = UserSerializer(data=res)
+        items.is_valid(raise_exception=True)
+        items.save()
+        return Response()
+
+
+
+class ResetPassword(generics.GenericAPIView):
+    def post(self,request):
+        res = request.data
+        password = id_generator()
+        User.objects.filter(email=res.get('email')).update(password=password)
+        message = get_template('forgot_pass.html').render({"password":password})
+        msg = EmailMultiAlternatives('OTP', message,'naidtngcolo@gmail.com', [request.data.get('email')])
+        html_content = f'<p></p>'
+        msg.content_subtype = "html"
+        msg.send()
         return Response()
 
 

@@ -4,9 +4,9 @@ from django.urls import path
 from django.urls.conf import include
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
-from users.views import Login,VerifyUser
+from users.views import Login,VerifyUser,ResetPassword,EditUser
 from product.views import ProductUserID
-from notifications.views import NotificationUserID,NotificationSeen
+from notifications.views import NotificationUserID,NotificationSeen,NotificationMessage
 from carts.views import CartsUserID
 from transaction.views import TransactionUserID,TransactionGetall
 from channel.views import ChannelGetall,ChannelSend
@@ -37,6 +37,7 @@ urlpatterns = [
     path('api/v1/product_id/<str:product_id>/', ProductUserID.as_view(), name='get_user'),
     path('api/v1/cart_user/<str:user_id>/', CartsUserID.as_view(), name='get_user'),
     path('api/v1/notification_seen/<str:user_id>/', NotificationSeen.as_view(), name='get_user'),
+    path('api/v1/notification_message/', NotificationMessage.as_view(), name='get_user'),
     path('api/v1/verify/<str:email>/', VerifyUser.as_view(), name='get_user'),
     path('api/v1/transaction_user/<str:user_id>/', TransactionUserID.as_view(), name='get_user'),
     path('api/v1/transaction_notif/', TransactionNotif.as_view(), name='get_user'),
@@ -46,6 +47,8 @@ urlpatterns = [
     path('api/v1/color_product/<str:product_id>/', ColorProductID.as_view(), name='get_user'),
     path('api/v1/size_product/<str:product_id>/', SizeProductID.as_view(), name='get_user'),
     path('api/v1/size_product_edit/', SizeEditProduct.as_view(), name='get_user'),
+    path('api/v1/reset_password/', ResetPassword.as_view(), name='get_user'),
+    path('api/v1/users-edit/', EditUser.as_view(), name='get_user'),
     
     path('api/v1/channel/', TransactionGetall.as_view(), name='get_user'),
     path('api/v1/channel-admin/<str:account_type>/<int:user_id>/', ChannelGetall.as_view(), name='get_user'),
