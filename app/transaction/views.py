@@ -31,6 +31,8 @@ class TransactionView(viewsets.ModelViewSet):
 
     def create(self,request):
         res = request.data
+        print(res)
+        print()
         serializer = TransactionSerializer(data=res)
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -65,6 +67,8 @@ class TransactionBulkCheckout(generics.GenericAPIView):
             x['city'] = res.get('city')
             x['zip'] = res.get('zip')
             x['province'] = res.get('province')
+            print(x)
+            x['subtotal']= float(x['price'])+15.00
             serializers = TransactionSerializer(data=x)
             serializers.is_valid(raise_exception=True)
             serializers.save()
@@ -91,18 +95,19 @@ class TransactionUserID(generics.GenericAPIView):
             items = Transaction.objects.filter(user_id=user_id)
             listitem = []
             serializers = TransactionSerializer(items,many=True)
-            print("OKAYYYYYYY")
-            print(serializers.data)
+     
             for x in serializers.data:
                 print(x['product_id'])
                 item = Product.objects.filter(id=x['product_id'])
                 item = ProductSerializer(item,many=True)
                 if(item.data!=[]):
+                    # print(item.data[0])
+                    print("FGAREGAEGE")
                     x['price'] = item.data[0]['price']
                     x['product_name'] = item.data[0]['product_name']
                     print(item.data[0]['product_name'])
                     print(x['price'])
-                return Response(data=serializers.data)
+            return Response(data=serializers.data)    
         except Exception as e:
             print(e)
             return Response(status=status.HTTP_404_NOT_FOUND,data=[])
