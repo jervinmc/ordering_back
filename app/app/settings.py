@@ -21,8 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-0t(_3t(f@74@3tuig%ugy7m55$b4-r57pa_n-5&*5aq84uuk6s'
-import django.core.management.commands.runserver as runserver
-runserver.Command.default_port = config('WebServer_Port', default = "8030")
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 from decouple import config
