@@ -43,3 +43,21 @@ class ProductUserID(generics.GenericAPIView):
             return Response(data=serializers.data)
         except Exception as e:
             return Response(status=status.HTTP_404_NOT_FOUND,data=[])
+
+class MostBuyItem(generics.GenericAPIView):
+    def get(self,request,format=None,product_id=None):
+        try:
+            product = Product.objects.all().order_by('-numBuy')
+            serializers = ProductSerializer(product,many=True)
+            return Response(data=serializers.data)
+        except Exception as e:
+            return Response(status=status.HTTP_404_NOT_FOUND,data=[])
+
+class MostViewed(generics.GenericAPIView):
+    def get(self,request,format=None,product_id=None):
+        try:
+            product = Product.objects.all().order_by('-numView')
+            serializers = ProductSerializer(product,many=True)
+            return Response(data=serializers.data)
+        except Exception as e:
+            return Response(status=status.HTTP_404_NOT_FOUND,data=[])

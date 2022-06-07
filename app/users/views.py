@@ -69,7 +69,7 @@ def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
 class VerifyUser(generics.GenericAPIView):
     def get(self,request,format=None,email=None):
-        User.objects.filter(email=email).update(status='Activated')
+        User.objects.filter(email=email).update(is_verified=True)
         return Response()
 
 

@@ -26,5 +26,7 @@ class Transaction(models.Model):
     image=models.CharField(_('image'),max_length=255,blank=True,null=True)
     size=models.CharField(_('size'),max_length=255,blank=True,null=True)
     color=models.CharField(_('color'),max_length=255,blank=True,null=True)
+    date=models.CharField(_('date'),max_length=255,blank=True,null=True)
+    contact_number=models.CharField(_('contact_number'),max_length=255,blank=True,null=True)
     class Meta:
         ordering = ["-id"]

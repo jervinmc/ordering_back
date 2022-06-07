@@ -6,6 +6,7 @@ from rest_framework import filters
 from rest_framework import status, viewsets
 from rest_framework.response import Response
 from product.models import Product
+from inventory_report.serializers import InventoryReportSerializer
 from django.db.models import F
 from product.serializers import ProductSerializer
 class CartsView(viewsets.ModelViewSet):  
@@ -17,6 +18,11 @@ class CartsView(viewsets.ModelViewSet):
     def create(self,request):
         res = request.data
         item_val = Carts.objects.filter(user_id = res.get('user_id'),product_id = res.get('product_id')).count()
+        Product.objects.filter(id=res.get('product_id')).update(stocks=F('stocks')-res.get('quantity'))
+        item_inv = Product.objects.filter(id=res.get('product_id'))
+        serializer = ProductSerializer(item_inv,many=True)
+        inventory_serializer = InventoryReportSerializer(data={"product_name":res.get('product_name'),"status":"Subtract","stocks":res.get('quantity'),"remaining_stocks":serializer.data[0]['stocks'],"module":"products"})
+        # Product.objects.filter(id=res.get('product_id')).update(numBuy=F('numBuy')+res.get('quantity'))
         if(item_val>0):
             Carts.objects.filter(user_id = res.get('user_id'),product_id = res.get('product_id')).update(quantity = F('quantity') + res.get('quantity'))
         else:

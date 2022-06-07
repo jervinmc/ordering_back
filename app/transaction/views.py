@@ -14,7 +14,13 @@ from django.db.models import F
 from notifications.models import Notification
 from notifications.serializers import NotificationSerializer
 from inventory_report.serializers import InventoryReportSerializer
+from taccount.serializers import TaccountSerializer
+from taccount.models import Taccount
+import http.client
+import json
 import pusher
+from datetime import datetime
+now = datetime.now()
 from decouple import config
 pusher_client = pusher.Pusher(
   app_id=config('pusher_id'),
@@ -37,6 +43,7 @@ class TransactionView(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         Product.objects.filter(id=res.get('product_id')).update(stocks=F('stocks')-res.get('quantity'))
+        Product.objects.filter(id=res.get('product_id')).update(numBuy=F('numBuy')+res.get('quantity'))
         serializers = NotificationSerializer(data={"user_id":1,"descriptions":f"You have a new order({res.get('product_name')}) from user_id {res.get('user_id')}","image":res.get('image'),"viewed":"no","module":"transactions","users_profile":res.get('users_profile')})
         serializers.is_valid(raise_exception=True)
         serializers.save()
@@ -63,12 +70,15 @@ class TransactionBulkCheckout(generics.GenericAPIView):
             x['barangay'] = res.get('barangay')
             x['address'] = res.get('address')
             x['fullname'] = res.get('fullname')
+            x['date'] = res.get('date')
             x['users_profile'] = res.get('users_profile')
             x['city'] = res.get('city')
             x['zip'] = res.get('zip')
             x['province'] = res.get('province')
             print(x)
             x['subtotal']= float(x['price'])+15.00
+            Taccount.objects.create(account="Product Sold",debit=x['subtotal'],credit=0,date=now)
+            x['contact_number']=res.get('contact_number')
             serializers = TransactionSerializer(data=x)
             serializers.is_valid(raise_exception=True)
             serializers.save()
@@ -81,7 +91,8 @@ class TransactionBulkCheckout(generics.GenericAPIView):
                 item1.save()
             inventory_serializer = InventoryReportSerializer(data={"product_name":res.get('product_name'),"status":"Subtract","stocks":x['quantity'],"remaining_stocks":serializer.data[0]['stocks'],"module":"products"})
             Carts.objects.filter(user_id = res['data'][0]['user_id'],product_id=x['product_id'] ).delete()
-            Product.objects.filter(id=x['product_id']).update(stocks=F('stocks')-x['quantity'])
+            # Product.objects.filter(id=x['product_id']).update(stocks=F('stocks')-x['quantity'])
+            # Product.objects.filter(id=res.get('product_id')).update(numBuy=F('numBuy')+res.get('quantity'))
             NotificationSerializer(data={"user_id":1,"descriptions":f"You have a new order({x['product_name']}) from user_id = {res.get('user_id')}","image":x['image'],"module":"transactions"})
         pusher_client.trigger('notification_admin', 'my-test', {'message': f'Item status : {res.get("status")}','user_id':res.get("user_id"),"viewed":"no"})
         print(res['data'][0]['user_id'])
@@ -117,6 +128,24 @@ class TransactionNotif(generics.GenericAPIView):
     def post(self,request):
         res = request.data
         try:
+            conn = http.client.HTTPSConnection("api.itexmo.com")
+            payload = json.dumps({
+            "Email": "jmacalawapersonal@gmail.com",
+            "Password": "wew123WEW ",
+            "Recipients": [
+                f"{res.get('contact_number')}"
+            ],
+            "Message": "Your item is now accepted.",
+            "ApiCode": "TR-JERVI771273_W0L8V",
+            "SenderId": "ITEXMO SMS"
+            })
+            headers = {
+            'Content-Type': 'application/json'
+            }
+            conn.request("POST", "/api/broadcast", payload, headers)
+            res = conn.getresponse()
+            data = res.read()
+            print(data.decode("utf-8"))
             serializers = NotificationSerializer(data={"user_id":res.get('user_id'),"descriptions":res.get('descriptions'),"image":res.get('image'),"viewed":"no"})
             serializers.is_valid(raise_exception=True)
             serializers.save()
@@ -132,6 +161,7 @@ class TransactionGetall(generics.GenericAPIView):
             listitem = []
             serializers = TransactionSerializer(items,many=True)
             print(serializers.data)
+            print("OKAYYYYYYFAWERCAEWRAEFADF")
             for x in serializers.data:
                 print(x['product_id'])
                 item = Product.objects.filter(id=x['product_id'])
