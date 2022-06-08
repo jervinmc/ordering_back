@@ -76,7 +76,7 @@ class TransactionBulkCheckout(generics.GenericAPIView):
             x['zip'] = res.get('zip')
             x['province'] = res.get('province')
             print(x)
-            x['subtotal']= float(x['price'])+15.00
+            x['subtotal']= float(x['price'])+(float(x['price'])*0.10)
             Taccount.objects.create(account="Product Sold",debit=x['subtotal'],credit=0,date=now)
             x['contact_number']=res.get('contact_number')
             serializers = TransactionSerializer(data=x)
@@ -135,7 +135,7 @@ class TransactionNotif(generics.GenericAPIView):
             "Recipients": [
                 f"{res.get('contact_number')}"
             ],
-            "Message": "Your item is now accepted.",
+            "Message": "Your Order with COD request is accepted, now we are preparing to ship your order Thank you!",
             "ApiCode": "TR-JERVI771273_W0L8V",
             "SenderId": "ITEXMO SMS"
             })
